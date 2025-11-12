@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\Admin\LowonganController;
-use App\Http\Controllers\Admin\MahasiswaController;
+use App\Http\Controllers\Admin\MahasiswaPelajarController;
+use App\Http\Controllers\Admin\DaftarMagangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,9 @@ Route::middleware(['auth', 'verified', 'admin'])
         })->name('dashboard');
 
         Route::resource('lowongan', LowonganController::class);
-        Route::resource('mahasiswa', MahasiswaController::class);
+        Route::resource('mahasiswa', MahasiswaPelajarController::class);
+        Route::resource('daftarmagang', DaftarMagangController::class);
+
     });
 
 // ======================

@@ -31,169 +31,170 @@ const submit = () => {
     <GuestLayout>
         <Head title="Register" />
 
-        <form @submit.prevent="submit" class="space-y-4">
-            <!-- Nama -->
-            <div>
-                <InputLabel for="name" value="Nama Lengkap" />
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+        <form @submit.prevent="submit" class="space-y-6">
+            <h2 class="text-2xl font-bold text-center text-gray-700">Form Pendaftaran Akun</h2>
 
-            <!-- Email -->
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+            <!-- Grid 2 Kolom -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Nama -->
+                <div>
+                    <InputLabel for="name" value="Nama Lengkap" />
+                    <TextInput
+                        id="name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.name"
+                        required
+                        autofocus
+                    />
+                    <InputError class="mt-2" :message="form.errors.name" />
+                </div>
 
-            <!-- Password -->
-            <div>
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+                <!-- Email -->
+                <div>
+                    <InputLabel for="email" value="Email" />
+                    <TextInput
+                        id="email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        v-model="form.email"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.email" />
+                </div>
 
-            <!-- Konfirmasi Password -->
-            <div>
-                <InputLabel for="password_confirmation" value="Konfirmasi Password" />
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
+                <!-- Password -->
+                <div>
+                    <InputLabel for="password" value="Password" />
+                    <TextInput
+                        id="password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
 
-            <!-- Gender -->
-            <div>
-                <InputLabel for="gender" value="Jenis Kelamin" />
-                <select
-                    id="gender"
-                    v-model="form.gender"
-                    required
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                >
-                    <option disabled value="">-- Pilih Jenis Kelamin --</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                </select>
-                <InputError class="mt-2" :message="form.errors.gender" />
-            </div>
+                <!-- Konfirmasi Password -->
+                <div>
+                    <InputLabel for="password_confirmation" value="Konfirmasi Password" />
+                    <TextInput
+                        id="password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password_confirmation"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                </div>
 
-            <!-- Agama -->
-            <div>
-                <InputLabel for="agama" value="Agama" />
-                <TextInput
-                    id="agama"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.agama"
-                    required
-                />
-                <InputError class="mt-2" :message="form.errors.agama" />
-            </div>
+                <!-- Gender -->
+                <div>
+                    <InputLabel for="gender" value="Jenis Kelamin" />
+                    <select
+                        id="gender"
+                        v-model="form.gender"
+                        required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                    >
+                        <option disabled value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                    <InputError class="mt-2" :message="form.errors.gender" />
+                </div>
 
-            <!-- Alamat -->
-            <div>
-                <InputLabel for="alamat" value="Alamat Lengkap" />
-                <TextInput
-                    id="alamat"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.alamat"
-                    required
-                />
-                <InputError class="mt-2" :message="form.errors.alamat" />
-            </div>
+                <!-- Agama -->
+                <div>
+                    <InputLabel for="agama" value="Agama" />
+                    <TextInput
+                        id="agama"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.agama"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.agama" />
+                </div>
 
-            <!-- Sekolah / Universitas -->
-            <div>
-                <InputLabel for="sekolah_univ" value="Sekolah / Universitas" />
-                <TextInput
-                    id="sekolah_univ"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.sekolah_univ"
-                    required
-                />
-                <InputError class="mt-2" :message="form.errors.sekolah_univ" />
-            </div>
+                <!-- Alamat -->
+                <div class="md:col-span-2">
+                    <InputLabel for="alamat" value="Alamat Lengkap" />
+                    <TextInput
+                        id="alamat"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.alamat"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.alamat" />
+                </div>
 
-            <!-- Jurusan -->
-            <div>
-                <InputLabel for="jurusan" value="Jurusan" />
-                <TextInput
-                    id="jurusan"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.jurusan"
-                    required
-                />
-                <InputError class="mt-2" :message="form.errors.jurusan" />
-            </div>
+                <!-- Sekolah / Universitas -->
+                <div>
+                    <InputLabel for="sekolah_univ" value="Sekolah / Universitas" />
+                    <TextInput
+                        id="sekolah_univ"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.sekolah_univ"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.sekolah_univ" />
+                </div>
 
-            <!-- Tanggal Lahir -->
-            <div>
-                <InputLabel for="tgl_lahir" value="Tanggal Lahir" />
-                <TextInput
-                    id="tgl_lahir"
-                    type="date"
-                    class="mt-1 block w-full"
-                    v-model="form.tgl_lahir"
-                    required
-                />
-                <InputError class="mt-2" :message="form.errors.tgl_lahir" />
-            </div>
+                <!-- Jurusan -->
+                <div>
+                    <InputLabel for="jurusan" value="Jurusan" />
+                    <TextInput
+                        id="jurusan"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.jurusan"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.jurusan" />
+                </div>
 
-            <!-- Nomor Telepon -->
-            <div>
-                <InputLabel for="no_tlp" value="Nomor Telepon" />
-                <TextInput
-                    id="no_tlp"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.no_tlp"
-                    required
-                />
-                <InputError class="mt-2" :message="form.errors.no_tlp" />
+                <!-- Tanggal Lahir -->
+                <div>
+                    <InputLabel for="tgl_lahir" value="Tanggal Lahir" />
+                    <TextInput
+                        id="tgl_lahir"
+                        type="date"
+                        class="mt-1 block w-full"
+                        v-model="form.tgl_lahir"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.tgl_lahir" />
+                </div>
+
+                <!-- Nomor Telepon -->
+                <div>
+                    <InputLabel for="no_tlp" value="Nomor Telepon" />
+                    <TextInput
+                        id="no_tlp"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.no_tlp"
+                        required
+                    />
+                    <InputError class="mt-2" :message="form.errors.no_tlp" />
+                </div>
             </div>
 
             <!-- Tombol -->
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex items-center justify-between mt-6">
                 <Link
                     :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    class="underline text-sm text-gray-600 hover:text-gray-900"
                 >
                     Sudah punya akun?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4 bg-green-700 hover:bg-green-800 focus:ring-green-500"
+                    class="bg-green-700 hover:bg-green-800 focus:ring-green-500"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >

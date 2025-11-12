@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DaftarMagang extends Model
 {
+    protected $table = 'daftarmagangs';
+
     protected $fillable = [
         'id_user', 'id_lowongan', 'email', 'nama', 'gender', 'agama',
         'alamat', 'sekolah_univ', 'jurusan', 'tgl_lahir', 'no_tlp',
