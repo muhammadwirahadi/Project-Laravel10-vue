@@ -44,15 +44,51 @@ const ubahStatus = (id, status) => {
               <tbody>
                 <tr v-for="(d, index) in daftarMagangs" :key="d.id" class="hover:bg-gray-50">
                   <td class="border p-2 text-center">{{ index + 1 }}</td>
-                  <td class="border p-2">{{ d.user?.name || '-' }}</td>
-                  <td class="border p-2">{{ d.user?.email || '-' }}</td>
-                  <td class="border p-2">{{ d.user?.no_tlp || '-' }}</td>
+                  <td class="border p-2">{{ d.nama || '-' }}</td>
+                  <td class="border p-2">{{ d.email || '-' }}</td>
+                  <td class="border p-2">{{ d.no_tlp || '-' }}</td>
                   <td class="border p-2">{{ d.lowongan?.nama_lowongan || '-' }}</td>
                   <td class="border p-2">{{ d.durasi || '-' }}</td>
                   <td class="border p-2">{{ d.created_at ? new Date(d.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : '-' }}</td>
-                  <td class="border p-2 text-center">{{ d.cv || '-' }}</td>
-                  <td class="border p-2 text-center">{{ d.surat_permohonan_magang || '-' }}</td>
-                  <td class="border p-2 text-center">{{ d.pembimbing || '-' }}</td>
+                  <td class="border p-2 text-center">
+                    <a
+                      v-if="d.cv_url"
+                      :href="d.cv_url"
+                      target="_blank"
+                      rel="noopener"
+                      class="text-xs text-white hover:bg-blue-800 bg-blue-600 px-2 py-1 rounded"
+                    >
+                      Lihat
+                    </a>
+                    <span v-else>-</span>
+                  </td>
+
+                  <td class="border p-2 text-center">
+                    <a
+                      v-if="d.surat_permohonan_url"
+                      :href="d.surat_permohonan_url"
+                      target="_blank"
+                      rel="noopener"
+                      class="text-xs text-white hover:bg-blue-800 bg-blue-600 px-2 py-1 rounded"
+                    >
+                      Lihat
+                    </a>
+                    <span v-else>-</span>
+                  </td>
+
+                  <td class="border p-2 text-center">
+                    <a
+                      v-if="d.pembimbing_url"
+                      :href="d.pembimbing_url"
+                      target="_blank"
+                      rel="noopener"
+                      class="text-xs text-white hover:bg-blue-800 bg-blue-600 px-2 py-1 rounded"
+                    >
+                      Lihat
+                    </a>
+                    <span v-else>-</span>
+                  </td>
+
                   <td class="border p-2 text-center">
                     <div class="flex items-center justify-center gap-2">
                       <!-- STATUS -->
@@ -87,7 +123,7 @@ const ubahStatus = (id, status) => {
                   </td>
                 </tr>
                 <tr v-if="!daftarMagangs.length">
-                  <td colspan="6" class="text-center text-gray-500 py-4">
+                  <td colspan="6" class="text-right text-gray-500 py-4">
                     Belum ada pendaftar magang.
                   </td>
                 </tr>

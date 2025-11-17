@@ -96,7 +96,7 @@ const updateMahasiswa = () => {
                   <td class="p-2 border">{{ m.jurusan || '-' }}</td>
                   <td class="p-2 border">{{ m.tgl_lahir || '-' }}</td>
                   <td class="p-2 border">{{ m.no_tlp || '-' }}</td>
-                  <td class="p-2 border text-center space-y-2">
+                  <td class="p-2 border text-center space-x-2">
                     <button
                       @click="openModal(m)"
                       class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"

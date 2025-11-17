@@ -8,21 +8,26 @@ use Inertia\Inertia;
 use App\Http\Controllers\Admin\LowonganController;
 use App\Http\Controllers\Admin\MahasiswaPelajarController;
 use App\Http\Controllers\Admin\DaftarMagangController;
+use App\Models\Lowongan;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
+        'lowongans' => Lowongan::all(),
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::post('/daftar-magang', [DaftarMagangController::class, 'store'])
+    ->name('daftar.magang.store');
+
 
 // ======================
 //   Admin Only Section
