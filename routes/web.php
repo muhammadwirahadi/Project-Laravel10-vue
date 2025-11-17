@@ -31,12 +31,14 @@ Route::middleware(['auth', 'verified', 'admin'])
     ->prefix('admin')
     ->group(function () {
         Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
+            return Inertia::render('Admin/Dashboard/Dashboard');
         })->name('dashboard');
 
         Route::resource('lowongan', LowonganController::class);
         Route::resource('mahasiswa', MahasiswaPelajarController::class);
         Route::resource('daftarmagang', DaftarMagangController::class);
+        Route::put('/daftar-magang/{id}/status', [DaftarMagangController::class, 'updateStatus']);
+
 
     });
 

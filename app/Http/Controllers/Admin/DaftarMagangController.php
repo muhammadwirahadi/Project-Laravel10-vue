@@ -17,4 +17,17 @@ class DaftarMagangController extends Controller
             'daftarMagangs' => $daftarMagangs
         ]);
     }
+
+    public function updateStatus($id, Request $request)
+    {
+        $request->validate([
+            'status' => 'required|in:Pending,Diterima,Ditolak'
+        ]);
+
+        $daftar = DaftarMagang::findOrFail($id);
+        $daftar->status = $request->status;
+        $daftar->save();
+
+        return back()->with('success', 'Status berhasil diperbarui!');
+    }
 }

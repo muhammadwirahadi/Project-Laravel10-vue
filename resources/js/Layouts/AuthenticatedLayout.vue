@@ -43,7 +43,7 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
                                 
                                 <NavLink :href="route('daftarmagang.index')" :active="route().current('daftarmagang.index')">
-                                    Daftar Pendaftar Magang
+                                    Pendaftar Magang
                                 </NavLink>
 
                             </div>
@@ -139,7 +139,7 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         
                         <ResponsiveNavLink :href="route('daftarmagang.index')" :active="route().current('daftarmagang.index')">
-                            Daftar Pendaftar Magang
+                            Pendaftar Magang
                         </ResponsiveNavLink>
                     </div>
 

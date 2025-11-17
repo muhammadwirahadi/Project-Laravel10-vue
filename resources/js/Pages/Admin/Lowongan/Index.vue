@@ -34,7 +34,7 @@ const hapus = (id) => {
                   <button @click="tambah" class="bg-blue-500 text-white px-4 py-2 rounded ml-2">Tambah</button>
                 </div>
  
-                <table class="w-full border">
+                <table class="w-full border text-sm">
                   <thead>
                     <tr class="bg-gray-100 text-left">
                       <th class="p-2 border">No</th>

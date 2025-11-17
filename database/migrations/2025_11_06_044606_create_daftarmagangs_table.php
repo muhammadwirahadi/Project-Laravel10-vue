@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('cv')->nullable();
             $table->string('surat_permohonan_magang')->nullable();
             $table->string('surat_pembimbing')->nullable();
-            $table->string('status')->default('pending');
+            $table->enum('status', ['Pending', 'Diterima', 'Ditolak'])->default('Pending');
             $table->timestamps();
         });
     }

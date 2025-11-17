@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+// import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
 defineProps({
     canLogin: Boolean,

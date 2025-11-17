@@ -57,7 +57,7 @@ const updateMahasiswa = () => {
     </template>
 
     <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-10xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6">
             <h3 class="text-lg font-semibold mb-4">
@@ -71,6 +71,8 @@ const updateMahasiswa = () => {
                   <th class="p-2 border">Nama</th>
                   <th class="p-2 border">Email</th>
                   <th class="p-2 border">Gender</th>
+                  <th class="p-2 border">Agama</th>
+                  <th class="p-2 border">Alamat</th>
                   <th class="p-2 border">Sekolah / Universitas</th>
                   <th class="p-2 border">Jurusan</th>
                   <th class="p-2 border">Tanggal Lahir</th>
@@ -88,11 +90,13 @@ const updateMahasiswa = () => {
                   <td class="p-2 border">{{ m.name }}</td>
                   <td class="p-2 border">{{ m.email }}</td>
                   <td class="p-2 border">{{ m.gender || '-' }}</td>
+                  <td class="p-2 border">{{ m.agama || '-' }}</td>
+                  <td class="p-2 border">{{ m.alamat || '-' }}</td>
                   <td class="p-2 border">{{ m.sekolah_univ || '-' }}</td>
                   <td class="p-2 border">{{ m.jurusan || '-' }}</td>
                   <td class="p-2 border">{{ m.tgl_lahir || '-' }}</td>
                   <td class="p-2 border">{{ m.no_tlp || '-' }}</td>
-                  <td class="p-2 border text-center space-x-2">
+                  <td class="p-2 border text-center space-y-2">
                     <button
                       @click="openModal(m)"
                       class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
