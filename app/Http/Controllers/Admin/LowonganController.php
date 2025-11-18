@@ -12,13 +12,28 @@ class LowonganController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lowongans = Lowongan::latest()->get();
+        $search = $request->search;
+
+        $lowongans = Lowongan::when($search, function ($query) use ($search) {
+            $query->where('nama_lowongan', 'LIKE', "%{$search}%");
+        })
+            ->orderBy('id', 'DESC')
+            ->paginate(4)
+            ->through(fn($l) => [
+                'id' => $l->id,
+                'nama_lowongan' => $l->nama_lowongan,
+            ]);
+
         return Inertia::render('Admin/Lowongan/Index', [
-            'lowongans' => $lowongans
+            'lowongans' => $lowongans,
+            'filters' => [
+                'search' => $search,
+            ],
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

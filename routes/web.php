@@ -43,8 +43,6 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('mahasiswa', MahasiswaPelajarController::class);
         Route::resource('daftarmagang', DaftarMagangController::class);
         Route::put('/daftar-magang/{id}/status', [DaftarMagangController::class, 'updateStatus']);
-
-
     });
 
 // ======================

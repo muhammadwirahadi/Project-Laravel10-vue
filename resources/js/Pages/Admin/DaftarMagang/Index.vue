@@ -9,6 +9,12 @@ defineProps({
 const ubahStatus = (id, status) => {
   router.put(`/admin/daftar-magang/${id}/status`, { status });
 };
+
+function hapus(id) {
+  if (confirm("Yakin ingin menghapus data ini?"))
+    { router.delete(route('daftarmagang.destroy', id)); }
+}
+
 </script>
 
 <template>
@@ -39,6 +45,7 @@ const ubahStatus = (id, status) => {
                   <th class="border p-2">Surat Permohonan Magang</th>
                   <th class="border p-2">Surat Pembimbing</th>
                   <th class="border p-2 text-center">Status</th>
+                  <th class="border p-2 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -89,38 +96,28 @@ const ubahStatus = (id, status) => {
                     <span v-else>-</span>
                   </td>
 
-                  <td class="border p-2 text-center">
-                    <div class="flex items-center justify-center gap-2">
-                      <!-- STATUS -->
-                      <span
-                        class="px-2 py-1 rounded text-xs font-semibold"
-                        :class="{
-                          'bg-gray-300 text-gray-700': d.status === 'Pending',
-                          'bg-green-500 text-white': d.status === 'Diterima',
-                          'bg-red-500 text-white': d.status === 'Ditolak',
-                        }"
-                      >
-                        {{ d.status }}
-                      </span>
+                <td class="border p-2">
+                    <select
+                        class="border rounded px-6 py-1 text-xs"
+                        :value="d.status"
+                        @change="ubahStatus(d.id, $event.target.value)"
+                    >
+                        <option value="Pending">Pending</option>
+                        <option value="Diterima">Diterima</option>
+                        <option value="Ditolak">Ditolak</option>
+                    </select>
+                </td>
 
-                      <!-- TOMBOL TERIMA -->
-                      <button
-                        @click="ubahStatus(d.id, 'Diterima')"
-                        class="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 text-xs"
-                      >
-                        Terima
-                      </button>
-
-                      <!-- TOMBOL TOLAK -->
-                      <button
-                        @click="ubahStatus(d.id, 'Ditolak')"
-                        class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 text-xs"
-                      >
-                        Tolak
-                      </button>
-
-                    </div>
+                  <td class="border p-2">
+                    <button 
+                        @click="hapus(d.id)"
+                        class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-xs"
+                    >
+                        Hapus
+                    </button>                    
                   </td>
+
+
                 </tr>
                 <tr v-if="!daftarMagangs.length">
                   <td colspan="6" class="text-right text-gray-500 py-4">

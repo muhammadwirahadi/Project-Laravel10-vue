@@ -7,36 +7,44 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\DaftarMagang;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DaftarMagangController extends Controller
 {
     public function index()
     {
-        // $daftarMagangs = DaftarMagang::with(['user', 'lowongan'])->get();
         $daftarMagangs = DaftarMagang::with(['user', 'lowongan'])
             ->get()
             ->map(function ($d) {
                 return [
                     'id' => $d->id,
-                    'nama' => $d->nama,
-                    'email' => $d->email,
-                    'no_tlp' => $d->no_tlp,
+
+                    // Data dari tabel users
+                    'nama' => $d->user->name ?? '-',
+                    'email' => $d->user->email ?? '-',
+                    'no_tlp' => $d->user->no_tlp ?? '-',
+                    'gender' => $d->user->gender ?? '-',
+                    'agama' => $d->user->agama ?? '-',
+                    'alamat' => $d->user->alamat ?? '-',
+                    'sekolah_univ' => $d->user->sekolah_univ ?? '-',
+                    'jurusan' => $d->user->jurusan ?? '-',
+                    'tgl_lahir' => $d->user->tgl_lahir ?? '-',
+
+                    // Data dari tabel daftar_magang
                     'durasi' => $d->durasi,
                     'status' => $d->status,
                     'created_at' => $d->created_at,
                     'lowongan' => $d->lowongan,
-                    'cv' => $d->cv,
-                    'surat_permohonan_magang' => $d->surat_permohonan_magang,
-                    'surat_pembimbing' => $d->surat_pembimbing,
-                    // URL FILE PREVIEW
+
+                    // File URL
                     'cv_url' => $d->cv ? asset('storage/' . $d->cv) : null,
-                    'surat_permohonan_url' => $d->surat_permohonan_magang ? asset('storage/' . $d->surat_permohonan_magang) : null,
-                    'pembimbing_url' => $d->surat_pembimbing ? asset('storage/' . $d->surat_pembimbing) : null,
+                    'surat_permohonan_url' =>
+                    $d->surat_permohonan_magang ? asset('storage/' . $d->surat_permohonan_magang) : null,
+                    'pembimbing_url' =>
+                    $d->surat_pembimbing ? asset('storage/' . $d->surat_pembimbing) : null,
                 ];
             });
 
-            
-        // dd($daftarMagangs);
         return Inertia::render('Admin/DaftarMagang/Index', [
             'daftarMagangs' => $daftarMagangs
         ]);
@@ -44,6 +52,7 @@ class DaftarMagangController extends Controller
 
     public function updateStatus($id, Request $request)
     {
+        // Ini untuk ketika status Ditolak Cv, Surat Permohonan magang, Surat Pembimbing masih bisa dilihat oleh admin
         $request->validate([
             'status' => 'required|in:Pending,Diterima,Ditolak'
         ]);
@@ -53,36 +62,92 @@ class DaftarMagangController extends Controller
         $daftar->save();
 
         return back()->with('success', 'Status berhasil diperbarui!');
+
+        // // Ini untuk ketika status Ditolak Cv, Surat Permohonan magang, Surat Pembimbing sudah tidak bisa dilihat oleh admin
+        // $request->validate([
+        //     'status' => 'required|in:Pending,Diterima,Ditolak'
+        // ]);
+
+        // $daftar = DaftarMagang::findOrFail($id);
+        // $oldStatus = $daftar->status;
+
+        // // Update status
+        // $daftar->status = $request->status;
+        // $daftar->save();
+
+        // // Jika status menjadi Ditolak => hapus file-file terkait
+        // if ($request->status === 'Ditolak') {
+
+        //     if ($daftar->cv && Storage::disk('public')->exists($daftar->cv)) {
+        //         Storage::disk('public')->delete($daftar->cv);
+        //     }
+
+        //     if ($daftar->surat_permohonan_magang && Storage::disk('public')->exists($daftar->surat_permohonan_magang)) {
+        //         Storage::disk('public')->delete($daftar->surat_permohonan_magang);
+        //     }
+
+        //     if ($daftar->surat_pembimbing && Storage::disk('public')->exists($daftar->surat_pembimbing)) {
+        //         Storage::disk('public')->delete($daftar->surat_pembimbing);
+        //     }
+
+        //     // Reset Kolom file di database
+        //     $daftar->update([
+        //         'cv' => null,
+        //         'surat_permohonan_magang' => null,
+        //         'surat_pembimbing' => null
+        //     ]);
+        // }
+
+        // return back()->with('success', 'Status berhasil diperbarui!');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'id_lowongan' => 'required',
-            'email' => 'required|email',
-            'nama' => 'required|string',
-            'gender' => 'required',
-            'agama' => 'required',
-            'alamat' => 'required',
-            'sekolah_univ' => 'required',
-            'jurusan' => 'required',
-            'tgl_lahir' => 'required|date',
-            'no_tlp' => 'required',
             'durasi' => 'required',
+
+            // File Upload
             'cv' => 'required|file|mimes:pdf|max:2048',
             'surat_permohonan_magang' => 'required|file|mimes:pdf|max:2048',
             'surat_pembimbing' => 'required|file|mimes:pdf|max:2048',
         ]);
 
-        // upload files
+        // Upload file
         $validated['cv'] = $request->file('cv')->store('cv', 'public');
         $validated['surat_permohonan_magang'] = $request->file('surat_permohonan_magang')->store('permohonan', 'public');
         $validated['surat_pembimbing'] = $request->file('surat_pembimbing')->store('pembimbing', 'public');
 
+        // Simpan Id User yang login
         $validated['id_user'] = Auth::id();
+
         DaftarMagang::create($validated);
 
         return back()->with('success', 'Pendaftaran berhasil dikirim!');
-        
+    }
+
+    public function destroy($id)
+    {
+        $data = DaftarMagang::findOrFail($id);
+
+        // Hapus file CV
+        if ($data->cv && Storage::disk('public')->exists($data->cv)) {
+            Storage::disk('public')->delete($data->cv);
+        }
+
+        // Hapus Surat Permohonan Magang
+        if ($data->surat_permohonan_magang && Storage::disk('public')->exists($data->surat_permohonan_magang)) {
+            Storage::disk('public')->delete($data->surat_permohonan_magang);
+        }
+
+        // Hapus Surat Pembimbing
+        if ($data->surat_pembimbing && Storage::disk('public')->exists($data->surat_pembimbing)) {
+            Storage::disk('public')->delete($data->surat_pembimbing);
+        }
+
+        // Hapus data pendaftar
+        $data->delete();
+
+        return back()->with('success', 'Data pendaftar dan semua file berhasil dihapus.');
     }
 }
