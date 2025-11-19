@@ -25,8 +25,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::post('/daftar-magang', [DaftarMagangController::class, 'store'])
-    ->name('daftar.magang.store');
+
 
 
 // ======================
@@ -43,6 +42,8 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('mahasiswa', MahasiswaPelajarController::class);
         Route::resource('daftarmagang', DaftarMagangController::class);
         Route::put('/daftar-magang/{id}/status', [DaftarMagangController::class, 'updateStatus']);
+        Route::get('/admin/daftarmagang', [DaftarMagangController::class, 'index'])->name('daftarmagang.index');
+
     });
 
 // ======================
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/daftar-magang', [DaftarMagangController::class, 'store'])
+    ->name('daftar.magang.store');
 });
 
 require __DIR__.'/auth.php';

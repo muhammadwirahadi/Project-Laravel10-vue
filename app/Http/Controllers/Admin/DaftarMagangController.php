@@ -11,44 +11,69 @@ use Illuminate\Support\Facades\Storage;
 
 class DaftarMagangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Ambil keyword pencarian dari query string
+        $search = $request->query('search');
+
+        // Query dengan search + pagination
         $daftarMagangs = DaftarMagang::with(['user', 'lowongan'])
-            ->get()
-            ->map(function ($d) {
+            ->when($search, function ($query) use ($search) {
+
+                // Search berdasarkan user
+                $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('no_tlp', 'LIKE', "%{$search}%")
+                        ->orWhere('sekolah_univ', 'LIKE', "%{$search}%")
+                        ->orWhere('jurusan', 'LIKE', "%{$search}%");
+                });
+
+                // Search berdasarkan lowongan
+                $query->orWhereHas('lowongan', function ($q) use ($search) {
+                    $q->where('nama_lowongan', 'LIKE', "%{$search}%");
+                });
+
+                // Search kolom daftar_magang
+                $query->orWhere('durasi', 'LIKE', "%{$search}%")
+                    ->orWhere('status', 'LIKE', "%{$search}%")
+                    ->orWhereDate('created_at', $search);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(4)
+            ->withQueryString()
+            ->through(function ($d) {
                 return [
                     'id' => $d->id,
 
-                    // Data dari tabel users
+                    // User
                     'nama' => $d->user->name ?? '-',
                     'email' => $d->user->email ?? '-',
                     'no_tlp' => $d->user->no_tlp ?? '-',
-                    'gender' => $d->user->gender ?? '-',
-                    'agama' => $d->user->agama ?? '-',
-                    'alamat' => $d->user->alamat ?? '-',
-                    'sekolah_univ' => $d->user->sekolah_univ ?? '-',
                     'jurusan' => $d->user->jurusan ?? '-',
-                    'tgl_lahir' => $d->user->tgl_lahir ?? '-',
 
-                    // Data dari tabel daftar_magang
+                    // Daftar Magang
                     'durasi' => $d->durasi,
                     'status' => $d->status,
                     'created_at' => $d->created_at,
                     'lowongan' => $d->lowongan,
 
-                    // File URL
+                    // File
                     'cv_url' => $d->cv ? asset('storage/' . $d->cv) : null,
-                    'surat_permohonan_url' =>
-                    $d->surat_permohonan_magang ? asset('storage/' . $d->surat_permohonan_magang) : null,
-                    'pembimbing_url' =>
-                    $d->surat_pembimbing ? asset('storage/' . $d->surat_pembimbing) : null,
+                    'surat_permohonan_url' => $d->surat_permohonan_magang ? asset('storage/' . $d->surat_permohonan_magang) : null,
+                    'pembimbing_url' => $d->surat_pembimbing ? asset('storage/' . $d->surat_pembimbing) : null,
                 ];
             });
 
+
         return Inertia::render('Admin/DaftarMagang/Index', [
-            'daftarMagangs' => $daftarMagangs
+            'daftarMagangs' => $daftarMagangs,
+            'filters' => [
+                'search' => $search, // dikirim ke vue untuk input search
+            ]
         ]);
     }
+
 
     public function updateStatus($id, Request $request)
     {
@@ -103,9 +128,16 @@ class DaftarMagangController extends Controller
 
     public function store(Request $request)
     {
+        // Cek apakah user sudah daftar 3 kali
+        $count = DaftarMagang::where('id_user', Auth::id())->count();
+
+        if ($count >= 3) {
+            return back()->with('error', 'Anda hanya bisa mendaftar maksimal 3 kali.');
+        }
+
         $validated = $request->validate([
             'id_lowongan' => 'required',
-            'durasi' => 'required',
+            'durasi' => 'required|integer|min:1|max:12',
 
             // File Upload
             'cv' => 'required|file|mimes:pdf|max:2048',

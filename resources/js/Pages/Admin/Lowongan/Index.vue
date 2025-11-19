@@ -3,7 +3,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
-defineProps({ lowongans: Array });
+
+const props = defineProps({
+  lowongans: Object,
+  filters: {
+    type: Object,
+    default: () => ({ search: '' })
+  }
+});
 
 const nama = ref('');
 
@@ -42,14 +49,13 @@ const go = (url) => {
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6">
               
-
-              <!-- BARIS TAMBAH + SEARCH (flex) -->
+              <!-- BARIS TAMBAH + SEARCH -->
               <div class="flex justify-between items-center mb-6 mx-4">
                 
                 <!-- Tambah Lowongan -->
                 <div>
                   <input v-model="nama" placeholder="Nama lowongan"
-                         class="border p-2 rounded" />
+                         class="border p-2 rounded " />
                   <button @click="tambah"
                           class="bg-blue-500 text-white px-4 py-2 rounded ml-2">
                     Tambah
@@ -71,7 +77,6 @@ const go = (url) => {
                 <thead>
                   <tr class="bg-gray-100 text-left">
                     <th class="p-2 border">No</th>
-                    <th class="p-2 border">ID</th>
                     <th class="p-2 border">Nama Lowongan</th>
                     <th class="p-2 border text-center">Aksi</th>
                   </tr>
@@ -81,7 +86,6 @@ const go = (url) => {
                     <td class="p-2 border text-center">
                       {{ lowongans.from + index }}
                     </td>
-                    <td class="p-2 border text-center">{{ l.id }}</td>
                     <td class="p-2 border">{{ l.nama_lowongan }}</td>
                     <td class="p-2 border text-center">
                       <button @click="hapus(l.id)"

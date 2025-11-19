@@ -3,11 +3,20 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-defineProps({
-  mahasiswa: Array,
+const props = defineProps({
+  mahasiswas: {
+    type: Object,
+    required: true,
+  },
+  filters: {
+    type: Object,
+    default: () => ({ 
+      search: ''
+    })
+  }
 });
 
-// DATA UNTUK MODAL EDIT
+// Data untuk Modal Edit
 const showModal = ref(false);
 const editData = ref({
   id: '',
@@ -20,14 +29,14 @@ const editData = ref({
   no_tlp: ''
 });
 
-// FUNGSI UNTUK HAPUS DATA
+// Fungsi untuk Hapus Data
 const hapus = (id) => {
   if (confirm('Yakin ingin menghapus data ini?')) {
     router.delete(`/admin/mahasiswa/${id}`);
   }
 };
 
-// FUNGSI UNTUK EDIT DATA
+// Fungsi untuk Edit Data
 const openModal = (m) => {
   editData.value = { ...m };
   showModal.value = true;
@@ -44,6 +53,20 @@ const updateMahasiswa = () => {
     },
   });
 };
+
+// Search
+const search = ref(props.filters.search ?? '');
+
+const cari = () => {
+  router.get('/admin/mahasiswa', { search: search.value }, { preserveState: true })
+};
+
+const go = (url) => {
+  if (url) {
+    router.get(url, {}, { preserveState: true });
+  }
+};
+
 </script>
 
 <template>
@@ -60,64 +83,87 @@ const updateMahasiswa = () => {
       <div class="max-w-10xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-6">
-            <h3 class="text-lg font-semibold mb-4">
-              Daftar Mahasiswa / Pelajar
-            </h3>
+            <div class="flex justify-between items-center mb-6 mx-4">
+              
+              <h3 class="font-semibold text-lg">Daftar Mahasiswa / Pelajar</h3>
 
+              <!-- Search -->
+              <input
+                v-model="search"
+                @input="cari"
+                placeholder="Cari Mahasiswa..."
+                class="border p-2 rounded"
+              />
+            </div>
             <table class="w-full border text-sm">
               <thead>
-                <tr class="bg-gray-100 text-left">
+                <tr class="bg-gray-100">
                   <th class="p-2 border">No</th>
                   <th class="p-2 border">Nama</th>
                   <th class="p-2 border">Email</th>
                   <th class="p-2 border">Gender</th>
                   <th class="p-2 border">Agama</th>
                   <th class="p-2 border">Alamat</th>
-                  <th class="p-2 border">Sekolah / Universitas</th>
+                  <th class="p-2 border">Sekolah / Univ</th>
                   <th class="p-2 border">Jurusan</th>
                   <th class="p-2 border">Tanggal Lahir</th>
-                  <th class="p-2 border">No. Telp</th>
+                  <th class="p-2 border">No Telepon</th>
                   <th class="p-2 border text-center">Aksi</th>
                 </tr>
               </thead>
+
               <tbody>
-                <tr
-                  v-for="(m, index) in mahasiswa"
-                  :key="m.id"
-                  class="hover:bg-gray-50"
-                >
-                  <td class="p-2 border text-center">{{ index + 1 }}</td>
+                <tr v-for="(m, index) in mahasiswas.data" :key="m.id">
+                  <td class="p-2 border text-center">
+                    {{ mahasiswas.from + index }}
+                  </td>
                   <td class="p-2 border">{{ m.name }}</td>
                   <td class="p-2 border">{{ m.email }}</td>
-                  <td class="p-2 border">{{ m.gender || '-' }}</td>
-                  <td class="p-2 border">{{ m.agama || '-' }}</td>
-                  <td class="p-2 border">{{ m.alamat || '-' }}</td>
-                  <td class="p-2 border">{{ m.sekolah_univ || '-' }}</td>
-                  <td class="p-2 border">{{ m.jurusan || '-' }}</td>
-                  <td class="p-2 border">{{ m.tgl_lahir || '-' }}</td>
-                  <td class="p-2 border">{{ m.no_tlp || '-' }}</td>
-                  <td class="p-2 border text-center space-x-2">
+                  <td class="p-2 border">{{ m.gender }}</td>
+                  <td class="p-2 border">{{ m.agama }}</td>
+                  <td class="p-2 border">{{ m.alamat }}</td>
+                  <td class="p-2 border">{{ m.sekolah_univ }}</td>
+                  <td class="p-2 border">{{ m.jurusan }}</td>
+                  <td class="p-2 border">{{ m.tgl_lahir }}</td>
+                  <td class="p-2 border">{{ m.no_tlp }}</td>
+
+                  <td class="p-2 border text-center text-sm">
                     <button
                       @click="openModal(m)"
-                      class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition"
+                      class="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
                     >
                       Edit
                     </button>
+
                     <button
                       @click="hapus(m.id)"
-                      class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                      class="bg-red-500 text-white px-3 py-1 rounded"
                     >
                       Hapus
                     </button>
                   </td>
                 </tr>
-                <tr v-if="!mahasiswa.length">
-                  <td colspan="9" class="text-center text-gray-500 py-4">
-                    Belum ada data mahasiswa/pelajar.
-                  </td>
-                </tr>
               </tbody>
             </table>
+
+            <div class="flex justify-center mt-4">
+              <nav class="flex space-x-2 text-xs">
+                <button
+                  v-for="link in mahasiswas.links"
+                  :key="link.label"
+                  v-html="link.label"
+                  @click="go(link.url)"
+                  class="px-3 py-1 border rounded"
+                  :class="{
+                    'bg-blue-500 text-white': link.active,
+                    'text-gray-400': !link.url
+                  }"
+                />
+              </nav>
+            </div>        
+            
+            
+
           </div>
         </div>
       </div>
@@ -150,6 +196,20 @@ const updateMahasiswa = () => {
               <option value="Laki-laki">Laki-laki</option>
               <option value="Perempuan">Perempuan</option>
             </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Agama</label>
+            <input
+              v-model="editData.agama"
+              class="w-full border p-2 rounded"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Alamat</label>
+            <input
+              v-model="editData.alamat"
+              class="w-full border p-2 rounded"
+            />
           </div>
           <div>
             <label class="block text-sm font-medium">Sekolah / Universitas</label>

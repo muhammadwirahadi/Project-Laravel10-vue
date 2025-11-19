@@ -58,11 +58,26 @@ const openModal = (lowongan) => {
 const submitDaftar = () => {
   formDaftar.post(route("daftar.magang.store"), {
     forceFormData: true,
+    preserveScroll: true,
     onSuccess: () => {
-      showModal.value = false;
-      formDaftar.reset();
+      // Hanya tutup modal jika TIDAK ADA error
+      if (!page.props.flash?.error) {
+        setTimeout(() => {
+          showModal.value = false;
+          formDaftar.reset();
+        }, 1000);
+      }
     },
   });
+};
+
+const handleDaftar = (lowongan) => {
+  if (!page.props.auth?.user) {
+    window.location.href = route("login");
+    return;
+  }
+
+  openModal(lowongan);
 };
 
 // Logout
@@ -144,7 +159,7 @@ const logout = () => form.post(route("logout"));
           <p class="text-gray-700 mt-2">{{ l.deskripsi || "Tidak ada deskripsi" }}</p>
 
           <button
-            @click="openModal(l)"
+            @click="handleDaftar(l)"
             class="mt-4 bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md"
           >
             Daftar Magang
@@ -172,6 +187,16 @@ const logout = () => form.post(route("logout"));
       </h2>
 
       <form @submit.prevent="submitDaftar">
+
+        <div v-if="$page.props.flash?.error" class="bg-red-600 text-white p-3 rounded mb-4">
+          {{ $page.props.flash.error }}
+        </div>
+
+        <div v-if="$page.props.flash?.success" class="bg-green-600 text-white p-3 rounded mb-4">
+          {{ $page.props.flash.success }}
+        </div>
+                
+
         <div class="grid grid-cols-2 gap-4">
           <input v-model="formDaftar.nama" placeholder="Nama" class="border p-2 rounded" required />
           <input v-model="formDaftar.email" placeholder="Email" class="border p-2 rounded" required />
@@ -193,7 +218,7 @@ const logout = () => form.post(route("logout"));
           </div>
 
           <input v-model="formDaftar.no_tlp" placeholder="No Telpon" class="border p-2 rounded" required/>
-          <input v-model="formDaftar.durasi" placeholder="Durasi (contoh: 3 bulan)" class="border p-2 rounded" required/>
+          <input type="number" min="1" v-model="formDaftar.durasi" placeholder="Durasi (contoh: 3/6)" class="border p-2 rounded" required/>
         </div>
 
         <!-- FILE UPLOAD -->

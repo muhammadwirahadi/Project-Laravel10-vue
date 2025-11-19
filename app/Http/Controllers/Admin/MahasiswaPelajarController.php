@@ -12,12 +12,31 @@ class MahasiswaPelajarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $mahasiswa = User::where('role_id', 2)->get();
+        $query = User::where('role_id', 2); 
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhere('gender', 'like', '%' . $request->search . '%')
+                    ->orWhere('agama', 'like', '%' . $request->search . '%')
+                    ->orWhere('alamat', 'like', '%' . $request->search . '%')
+                    ->orWhere('sekolah_univ', 'like', '%' . $request->search . '%')
+                    ->orWhere('jurusan', 'like', '%' . $request->search . '%')
+                    ->orWhere('tgl_lahir', 'like', '%' . $request->search . '%')
+                    ->orWhere('no_tlp', 'like', '%' . $request->search . '%')
+                ;
+            });
+        }
+
 
         return Inertia::render('Admin/MahasiswaPelajar/Index', [
-            'mahasiswa' => $mahasiswa,
+            'mahasiswas' => $query->paginate(5)->withQueryString(),
+            'filters' => [
+                'search' => $request->search ?? ''
+            ]
         ]);
     }
 
