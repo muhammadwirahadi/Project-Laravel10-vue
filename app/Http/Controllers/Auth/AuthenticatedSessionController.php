@@ -38,8 +38,17 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            // ✅ Cek role setelah login
+            //  Cek role setelah login
             $user = Auth::user();
+
+            // Cek Verifikasi Email
+            if (is_null($user->email_verified_at)) {
+                Auth::logout();
+
+                return back()->withErrors([
+                    'email' => 'Akun Anda belum melakukan verifikasi email.',
+                ]);
+            }
 
             if ($user->role_id === 1) {
                 // Jika admin

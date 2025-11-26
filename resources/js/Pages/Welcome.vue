@@ -110,7 +110,7 @@ const logout = () => form.post(route("logout"));
         <Link
           v-else
           :href="route('lowongan.index')"
-          class="font-semibold text-green-100 hover:bg-green-900 bg-green-950 p-2 rounded-md"
+          class="font-semibold text-green-100 hover:bg-green-800 bg-green-950 p-2 rounded-md"
         >
           Lihat Lowongan
         </Link>

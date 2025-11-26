@@ -128,20 +128,23 @@ const go = (url) => {
                   <td class="p-2 border">{{ m.no_tlp }}</td>
 
                   <td class="p-2 border text-center text-sm">
-                    <button
-                      @click="openModal(m)"
-                      class="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
-                    >
-                      Edit
-                    </button>
+                    <div class="flex items-center justify-center gap-2 whitespace-nowrap">
+                      <button
+                        @click="openModal(m)"
+                        class="bg-yellow-500 text-white px-3 py-1 rounded"
+                      >
+                        Edit
+                      </button>
 
-                    <button
-                      @click="hapus(m.id)"
-                      class="bg-red-500 text-white px-3 py-1 rounded"
-                    >
-                      Hapus
-                    </button>
+                      <button
+                        @click="hapus(m.id)"
+                        class="bg-red-500 text-white px-3 py-1 rounded"
+                      >
+                        Hapus
+                      </button>
+                    </div>
                   </td>
+
                 </tr>
               </tbody>
             </table>

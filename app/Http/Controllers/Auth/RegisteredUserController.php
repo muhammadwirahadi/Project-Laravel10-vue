@@ -61,13 +61,13 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Redirect berdasarkan role
-        if ($user->role_id == 1) {
-            // Admin
-            return redirect()->route('admin.dashboard');
-        }
+        // // Redirect berdasarkan role
+        // if ($user->role_id == 1) {
+        //     // Admin
+        //     return redirect()->route('admin.dashboard');
+        // }
 
         // User biasa
-        return redirect('/');
+        return redirect()->route('verification.notice');
     }
 }
