@@ -12,7 +12,7 @@ class CustomVerifyEmail extends VerifyEmail
         $url = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Verifikasi Email Anda - Sistem Magang')
+            ->subject('Verifikasi Email Anda - Magang Badilag')
             ->view('emails.verify-email', [
                 'url' => $url,
                 'name' => $notifiable->name

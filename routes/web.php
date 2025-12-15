@@ -15,6 +15,7 @@ use App\Models\Lowongan;
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'lowongans' => Lowongan::all(),
@@ -38,23 +39,26 @@ Route::middleware(['auth', 'verified', 'admin'])
             return Inertia::render('Admin/Dashboard/Dashboard');
         })->name('dashboard');
 
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::resource('lowongan', LowonganController::class);
         Route::resource('mahasiswa', MahasiswaPelajarController::class);
         Route::resource('daftarmagang', DaftarMagangController::class);
         Route::put('/daftar-magang/{id}/status', [DaftarMagangController::class, 'updateStatus']);
         Route::get('/admin/daftarmagang', [DaftarMagangController::class, 'index'])->name('daftarmagang.index');
-
     });
 
 // ======================
 //   User Auth Section
 // ======================
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::post('/daftar-magang', [DaftarMagangController::class, 'store'])
-    ->name('daftar.magang.store');
-});
+Route::middleware(['auth'])
+    ->prefix('user')
+    ->group(function () {
+        Route::get('/profile', [ProfileController::class, 'editUser'])
+            ->name('user.profile.index');
+        Route::post('/daftar-magang', [DaftarMagangController::class, 'store'])
+            ->name('daftar.magang.store');
+    });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
